@@ -11,6 +11,9 @@ import UIKit
 import HealthKitSampleGenerator
 import HealthKit
 
+import MessageUI
+import Zip
+
 class ImportProfileViewController : UIViewController {
     
     @IBOutlet weak var lbProfileName: UILabel!
@@ -93,4 +96,33 @@ class ImportProfileViewController : UIViewController {
         }
     }
     
+    @IBAction func emailData(_ sender: Any) {
+        if MFMailComposeViewController.canSendMail() {
+            let mailComposer = MFMailComposeViewController()
+            mailComposer.mailComposeDelegate = self
+            
+            mailComposer.setSubject("HealthKit export data")
+            mailComposer.setMessageBody("Data generated on " + (lbCreationDate.text ?? "unknown date"), isHTML: false)
+            
+            if let profile = profile {
+                do {
+                    let zippedFileName = profile.fileName + ".zip"
+                    let zippedFileUrl = try Zip.quickZipFiles([profile.fileAtPath], fileName: zippedFileName, progress: nil)
+                    let fileData = try! Data(contentsOf: zippedFileUrl)
+                    mailComposer.addAttachmentData(fileData, mimeType: "application/zip", fileName: zippedFileName)
+                }
+                catch {
+                    print("Woops")
+                }
+            }
+            self.present(mailComposer, animated: true, completion: nil)
+        }
+    }
+    
+}
+
+extension ImportProfileViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
 }

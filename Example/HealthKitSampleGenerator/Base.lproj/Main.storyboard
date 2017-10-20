@@ -14,7 +14,7 @@
         <scene sceneID="ptZ-WK-87q">
             <objects>
                 <navigationController id="4MM-OJ-z11" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Export" id="ALb-Gs-Kft"/>
+                    <tabBarItem key="tabBarItem" title="Export" image="health_sources" landscapeImage="health_sources" selectedImage="health_sources" id="ALb-Gs-Kft"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="4CV-qz-Qzu">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -290,7 +290,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="UY0-Fz-lBl">
-                                <rect key="frame" x="16" y="72" width="343" height="336"/>
+                                <rect key="frame" x="16" y="72" width="343" height="372"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="8Va-1n-uku">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="18"/>
@@ -485,6 +485,17 @@
                                             </activityIndicatorView>
                                         </subviews>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Vv-Mv-8nK">
+                                        <rect key="frame" x="0.0" y="342" width="343" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="2aE-pu-6Kc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <state key="normal" title="Email HealthKit Data"/>
+                                        <connections>
+                                            <action selector="emailData:" destination="ubF-u6-HfB" eventType="touchUpInside" id="rcg-0n-1ND"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -521,7 +532,7 @@
         <scene sceneID="bAL-YN-fm4">
             <objects>
                 <navigationController title="Profiles" id="dnD-aq-eoh" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profiles" id="Ejh-Mg-uOH"/>
+                    <tabBarItem key="tabBarItem" title="Profiles" image="product" landscapeImage="product" selectedImage="product" id="Ejh-Mg-uOH"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CaF-Oo-OfK">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -553,4 +564,8 @@
             <point key="canvasLocation" x="-2461" y="-1902"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="health_sources" width="30" height="30"/>
+        <image name="product" width="30" height="30"/>
+    </resources>
 </document>

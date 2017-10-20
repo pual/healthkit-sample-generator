@@ -8,6 +8,7 @@ end
 
 target 'HealthKitSampleGenerator_Example' do
   pod "HealthKitSampleGenerator", :path => "../"
+  pod 'Zip', '~> 1.0'
 end
 
 target 'HealthKitSampleGenerator_Tests' do
