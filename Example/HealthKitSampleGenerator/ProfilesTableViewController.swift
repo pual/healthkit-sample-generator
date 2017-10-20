@@ -48,6 +48,12 @@ class ProfilesTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func addFileAction(_ sender: Any) {
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .formSheet
+        present(documentPicker, animated: true, completion: nil)
+    }
 }
 
 // TableView DataSource
@@ -114,6 +120,54 @@ extension ProfilesTableViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
+}
+
+extension ProfilesTableViewController: UIDocumentPickerDelegate {
     
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        guard controller.documentPickerMode == .import else { return }
+        picked(documentsAt: [url])
+    }
     
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard controller.documentPickerMode == .import else { return }
+        picked(documentsAt: urls)
+    }
+    
+    private func picked(documentsAt urls: [URL]) {
+        var hasInvalidFiles = false
+        
+        urls.forEach { url in
+            guard url.pathExtension == "hsg" else {
+                hasInvalidFiles = true
+                return
+            }
+            copyToDocuments(url: url)
+        }
+        
+        if hasInvalidFiles {
+            displayInvalidFileAlert()
+        }
+        
+        tableView.reloadData()
+    }
+    
+    private func copyToDocuments(url: URL) {
+        guard url.isFileURL else { return }
+        
+        let fileManger = FileManager.default
+        let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
+        let destinationPath = documentDirectoryPath.appendingPathComponent(url.lastPathComponent)
+        do {
+            try fileManger.copyItem(atPath: url.path, toPath: destinationPath)
+        } catch let error as NSError {
+            print("File copy error: \(error)")
+        }
+    }
+    
+    private func displayInvalidFileAlert() {
+        let alert = UIAlertController(title: "You can only load .hsg files", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { _ in  self.tableView.reloadData() }))
+        present(alert, animated: true, completion: nil)
+    }
 }
