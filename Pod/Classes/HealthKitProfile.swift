@@ -23,7 +23,7 @@ open class HealthKitProfileMetaData {
 /// a healthkit Profile - can be used to read data from the profile and import the profile into the healthkit store.
 open class HealthKitProfile : CustomStringConvertible {
     
-    open let fileAtPath: URL
+    let fileAtPath: URL
     /// the name of the profile file - without any path components
     fileprivate(set) open var fileName: String
     /// the size of the profile file in bytes
