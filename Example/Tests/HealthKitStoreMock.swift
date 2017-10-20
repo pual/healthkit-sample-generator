@@ -12,7 +12,7 @@ import HealthKit
 public class HKBiologicalSexObjectMock: HKBiologicalSexObject {
     override public var biologicalSex: HKBiologicalSex {
         get {
-            return HKBiologicalSex.Male
+            return HKBiologicalSex.male
         }
     }
 }
@@ -20,7 +20,7 @@ public class HKBiologicalSexObjectMock: HKBiologicalSexObject {
 public class HKBloodTypeObjectMock: HKBloodTypeObject {
     override public var bloodType: HKBloodType {
         get {
-            return HKBloodType.APositive
+            return HKBloodType.aPositive
         }
     }
 }
@@ -35,10 +35,10 @@ public class HKFitzpatrickSkinTypeObjectMock: HKFitzpatrickSkinTypeObject {
 
 class HealthKitStoreMock: HKHealthStore {
     
-    override func dateOfBirth() throws -> NSDate {
-        let dateFormatter = NSDateFormatter()
+    override func dateOfBirth() throws -> Date {
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
-        return dateFormatter.dateFromString("01/30/1984")!
+        return dateFormatter.date(from: "01/30/1984")!
     }
     
     override func biologicalSex() throws -> HKBiologicalSexObject {

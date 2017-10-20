@@ -19,14 +19,14 @@ class OutputStreamTest: QuickSpec {
         it ("FileOutputStream should return the written data as String") {
             let text = "text"
             let tmpUrl = NSURL.init(fileURLWithPath: NSTemporaryDirectory())
-            let outputFileName  = tmpUrl.URLByAppendingPathComponent("x.txt").path!
+            let outputFileName  = tmpUrl.appendingPathComponent("x.txt")?.path
             
-            let fos = FileOutputStream(fileAtPath: outputFileName)
+            let fos = FileOutputStream(fileAtPath: outputFileName!)
             fos.open()
             fos.write(text)
             expect(fos.getDataAsString()) == text
             
-            try! NSFileManager.defaultManager().removeItemAtPath(outputFileName)
+            try! FileManager.default.removeItem(atPath: outputFileName!)
         }
 
     }

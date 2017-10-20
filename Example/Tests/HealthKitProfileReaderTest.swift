@@ -20,7 +20,7 @@ class HealthKitProfileReaderTest: QuickSpec {
         
         describe("Read and Manage Profile Data on disk") {
             
-            let pathUrl = NSBundle(forClass: self.dynamicType).bundleURL
+            let pathUrl = Bundle(for: type(of: self)).bundleURL
             let profiles = HealthKitProfileReader.readProfilesFromDisk(pathUrl)
             
             it("should create an array of profiles"){
@@ -33,7 +33,7 @@ class HealthKitProfileReaderTest: QuickSpec {
             it("should read the profile metadata"){
                 let profile = profiles[0]
                 
-                let testDate = NSDate(timeIntervalSince1970: 1446486924969.067/1000 )
+                let testDate = Date(timeIntervalSince1970: 1446486924969.067/1000 )
                 
                 profile.loadMetaData(false){ (metaData:HealthKitProfileMetaData) in
                     expect(metaData.creationDate) == testDate
@@ -56,7 +56,7 @@ class HealthKitProfileReaderTest: QuickSpec {
                 
                 let stepCount = samples[0] as! HKQuantitySample
                 expect(stepCount.sampleType.identifier) == "HKQuantityTypeIdentifierStepCount"
-                expect(stepCount.quantity.doubleValueForUnit(HKUnit(fromString: "count"))) == 200
+                expect(stepCount.quantity.doubleValue(for: HKUnit(from: "count"))) == 200
                
                 let sleepSample = samples[2] as! HKCategorySample
                 expect(sleepSample.value) == 0
@@ -65,7 +65,7 @@ class HealthKitProfileReaderTest: QuickSpec {
                 expect(bloodPresure.objects.count) == 2
                 
                 let workout = samples[7] as! HKWorkout
-                expect(workout.workoutActivityType) == HKWorkoutActivityType.Running
+                expect(workout.workoutActivityType) == HKWorkoutActivityType.running
                 
             }
             

@@ -15,17 +15,17 @@ import Nimble
 class SigleDocReaderTest: QuickSpec {
 
     override func spec() {
-        let fileAtPath = NSBundle(forClass: self.dynamicType).pathForResource("version-1.0.0.single-doc.json", ofType: "hsg")
+        let fileAtPath = Bundle(for: type(of: self)).path(forResource: "version-1.0.0.single-doc.json", ofType: "hsg")
 
         it("should read a single doc json file from version 1.0.0") {
-            let exist = NSFileManager.defaultManager().fileExistsAtPath(fileAtPath!)
+            let exist = FileManager.default.fileExists(atPath: fileAtPath!)
             expect(exist) == true
             
             let jsonStringOutputHandler = JsonStringOutputJsonHandler()
             
             JsonReader.readFileAtPath(fileAtPath!, withJsonHandler: jsonStringOutputHandler)
 
-            let stringFromFile = try! NSString(contentsOfFile: fileAtPath!, encoding: NSUTF8StringEncoding) as String
+            let stringFromFile = try! NSString(contentsOfFile: fileAtPath!, encoding: String.Encoding.utf8.rawValue) as String
             
             expect(stringFromFile).to(equal(jsonStringOutputHandler.json))
         }

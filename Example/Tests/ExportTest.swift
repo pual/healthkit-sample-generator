@@ -16,10 +16,10 @@ import HealthKit
 
 class ExportTest: QuickSpec {
     
-    internal func find(dataExporter: [DataExporter], className: Any) -> Any? {
+    internal func find(_ dataExporter: [DataExporter], className: Any) -> Any? {
         
         for exporter in dataExporter {
-            if String(exporter.dynamicType) == String(className) {
+            if String(describing: type(of: exporter)) == String(describing: className) {
                 return exporter
             }
         }

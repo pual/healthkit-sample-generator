@@ -13,18 +13,18 @@ public class BaselineTextField : UITextField {
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        borderStyle = UITextBorderStyle.None
+        borderStyle = UITextBorderStyle.none
         
     }
  
-    override public func drawRect(rect: CGRect) {
-        let ctx = UIGraphicsGetCurrentContext();
-        CGContextSetLineWidth(ctx, 1.0);
+    override public func draw(_ rect: CGRect) {
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        ctx.setLineWidth(1.0);
         
-        CGContextSetRGBStrokeColor(ctx, 0.6, 0.6, 0.6, 1);
-        CGContextMoveToPoint(ctx, 0, rect.size.height);
-        CGContextAddLineToPoint( ctx, rect.size.width, rect.size.height);
+        ctx.setStrokeColor(red: 0.6, green: 0.6, blue: 1, alpha: 1)
+        ctx.move(to: CGPoint(x: 0, y: rect.size.height))
+        ctx.addLine(to: CGPoint(x: rect.size.width, y: rect.size.height))
         
-        CGContextStrokePath(ctx);
+        ctx.strokePath();
     }
 }
