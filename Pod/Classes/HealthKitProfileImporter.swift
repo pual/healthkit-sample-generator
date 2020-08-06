@@ -29,7 +29,7 @@ open class HealthKitProfileImporter {
         self.importQueue.maxConcurrentOperationCount = 1
         self.importQueue.qualityOfService = QualityOfService.userInteractive
     }
- 
+    
     /**
         Import a profile in the healthkit store. The import is done on a different thread. You should sync the 
         callback calls with the main thread if you are updateiung the ui.
@@ -49,9 +49,13 @@ open class HealthKitProfileImporter {
                 return
             }
             
-            healthStore.requestAuthorization(toShare: HealthKitConstants.authorizationWriteTypes(), read: nil) {
-                (success, error) -> Void in
-                /// TODO success error handling
+            healthStore.requestAuthorization(toShare: HealthKitConstants.authorizationWriteTypes(), read: nil) { (success, error) -> Void in
+                if (error != nil) {
+                    print("Error: \(String(describing: error))")
+                }
+                if !success {
+                    print("Error, no success: \(success)")
+                }
 
                 self.importQueue.addOperation(){
                     
@@ -81,18 +85,21 @@ open class HealthKitProfileImporter {
                             lastSampleType = String(describing: sample.sampleType)
                             onProgress("importing \(lastSampleType)", nil)
                         }
-                        
-                        self.healthStore.save(sample, withCompletion: { (success:Bool, error:Error?) in
-                            /// TODO success error handling print(success, error)
+                        let semaphore = DispatchSemaphore(value: 0)
+                        self.healthStore.save(sample) { (success: Bool, error: Error?) in
                             if !success {
-                                print(error)
+                                print("no success for : \(sample)")
                             }
-                            
-                        })
+                            if let e = error {
+                                print("error occured: \(e.localizedDescription)")
+                            }
+                            semaphore.signal()
+                        }
+                        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
                     }
                     
                     onProgress("Import done", 1.0)
-                    
+                                       
                     onCompletion(nil)
                 }
             }

@@ -65,7 +65,7 @@ class ExportOperation: Operation {
         self.completionBlock = completionBlock
         self.qualityOfService = QualityOfService.userInteractive
     }
-    
+        
     override func main() {
         do {
             for exportTarget in exportTargets {
@@ -88,7 +88,6 @@ class ExportOperation: Operation {
         } catch let err {
             self.onError(err)
         }
-        
     }
 }
 
@@ -108,7 +107,7 @@ open class HealthKitDataExporter {
     public init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
-    
+        
     /**
      Exports the healthkit data to the specified targets with the provided configuration.
      - Parameter exportTargets: an array of EpxortTargets - you can specify more then one target if you need different formats of the data.
@@ -117,7 +116,7 @@ open class HealthKitDataExporter {
      - Parameter onCompletion: callback if the export is done or aborted with an Error.
     */
     open func export(exportTargets: [ExportTarget], exportConfiguration: ExportConfiguration, onProgress: @escaping ExportProgress, onCompletion: @escaping ExportCompletion) -> Void {
-        
+                        
         if !HKHealthStore.isHealthDataAvailable() {
             onCompletion(ExportError.healthDataNotAvailable)
             return
@@ -164,7 +163,7 @@ open class HealthKitDataExporter {
                     HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.basalBodyTemperature)! : HKUnit(from: "degC")
                 ]
                 
-                let dataExporter : [DataExporter] = self.getDataExporters(exportConfiguration, typeMap: customTypeMap)
+                let dataExporter : [DataExporter] = self.getDataExporters(exportConfiguration, typeMap: typeMap)
                         
                 let exportOperation = ExportOperation(
                     exportConfiguration: exportConfiguration,

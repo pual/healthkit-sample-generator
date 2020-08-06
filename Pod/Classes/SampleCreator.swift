@@ -115,7 +115,7 @@ extension SampleCreator {
 class CategorySampleCreator : SampleCreator {
     let type: HKCategoryType
     
-    init(typeName:String){
+    init(typeName:String) {
         self.type = HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier(rawValue: typeName))!
     }
     
