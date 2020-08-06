@@ -25,9 +25,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Export data</string>
+    <string>lorem ipsum dolor sit amet export.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Import data</string>
+    <string>lorem ipsum dolor sit amet import.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

@@ -27,9 +27,11 @@ public protocol ExportConfiguration {
 
 internal extension ExportConfiguration {
     
-    internal func getPredicate() -> NSPredicate? {
-        
-        let predicateNoCorreltion = HKQuery.predicateForObjectsWithNoCorrelation()
+    func getPredicate() -> NSPredicate? {
+//        let predicateNoCorreltion = HKQuery.predicateForObjectsWithNoCorrelation()
+        let predicateNoCorreltion = HKQuery.predicateForSamples(withStart: Date().addingTimeInterval(-60*60*24*366),
+                                                                end: Date(),
+                                                                options: [.strictStartDate, .strictEndDate])
         
         switch exportType {
         case .ALL:
@@ -59,7 +61,7 @@ public struct HealthDataFullExportConfiguration : ExportConfiguration {
         - Parameter profileName: the name of the profile
         - Parameter exportType: what should be exported. see HealthDataToExportType
     */
-    public init(profileName:String, exportType: HealthDataToExportType){
+    public init(profileName:String, exportType: HealthDataToExportType) {
         self.profileName = profileName
         self.exportType = exportType
     }

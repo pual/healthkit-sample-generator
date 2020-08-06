@@ -60,10 +60,12 @@ extension SampleCreator {
      - Parameter dict: The Json dictionary for a sample
      - Returns: a tupel with the start date and the end date
     */
-    func dictToTimeframe(_ dict:Dictionary<String, AnyObject>) -> (sDate:Date, eDate:Date) {
+    func dictToTimeframe(_ dict:Dictionary<String, AnyObject>) -> (sDate: Date, eDate: Date)? {
         
-        let startDateNumber = dict[HealthKitConstants.S_DATE] as! Double
-        let endDateOptNumber   = dict[HealthKitConstants.E_DATE] as? Double
+        guard let startDateNumber = dict[HealthKitConstants.S_DATE] as? Double else {
+            return nil
+        }
+        let endDateOptNumber = dict[HealthKitConstants.E_DATE] as? Double
         
         let startDate = Date(timeIntervalSince1970: startDateNumber/1000)
         var endDate: Date? = nil
@@ -71,6 +73,9 @@ extension SampleCreator {
             endDate = Date(timeIntervalSince1970: endDateNumber/1000)
         } else {
             endDate = startDate
+        }
+        guard startDate.timeIntervalSince1970 <= endDate!.timeIntervalSince1970 else {
+            return nil
         }
         return (startDate, endDate!)
     }
@@ -81,9 +86,9 @@ extension SampleCreator {
      - Parameter forType: the concrete category type that should be created
      - Returns: the CategorySample. Ready to save to the Health Store.
     */
-    func dictToCategorySample(_ dict:Dictionary<String, AnyObject>, forType type: HKCategoryType) -> HKCategorySample {
+    func dictToCategorySample(_ dict:Dictionary<String, AnyObject>, forType type: HKCategoryType) -> HKCategorySample? {
         let value = dict[HealthKitConstants.VALUE] as! Int
-        let dates = dictToTimeframe(dict)
+        guard let dates = dictToTimeframe(dict) else { return nil }
         
         return HKCategorySample(type: type, value: value, start: dates.sDate , end: dates.eDate)
     }
@@ -94,14 +99,12 @@ extension SampleCreator {
      - Parameter forType: the concrete quantity type that should be created
      - Returns: the QuantitySample. Ready to save to the Health Store.
      */
-    func dictToQuantitySample(_ dict:Dictionary<String, AnyObject>, forType type: HKQuantityType) -> HKQuantitySample {
+    func dictToQuantitySample(_ dict:Dictionary<String, AnyObject>, forType type: HKQuantityType) -> HKQuantitySample? {
+        guard let dates = dictToTimeframe(dict), let value = dict[HealthKitConstants.VALUE] as? Double else { return nil }
         
-        let dates = dictToTimeframe(dict)
-        
-        let value   = dict[HealthKitConstants.VALUE] as! Double
-        let strUnit = dict[HealthKitConstants.UNIT] as? String
-        
-        let hkUnit = HKUnit(from: strUnit!)
+        let strUnit = dict[HealthKitConstants.UNIT] as? String ?? "count"
+//        print("processing unit: \(strUnit)")
+        let hkUnit = HKUnit(from: strUnit)
         let quantity = HKQuantity(unit: hkUnit, doubleValue: value)
         
         return HKQuantitySample(type: type, quantity: quantity, start: dates.sDate, end: dates.eDate)
@@ -133,7 +136,6 @@ class QuantitySampleCreator : SampleCreator {
     }
     
     func createSample(_ sampleDict: AnyObject) -> HKSample? {
-        
         if let dict = sampleDict as? Dictionary<String, AnyObject> {
             return dictToQuantitySample(dict, forType:type)
         }
@@ -153,7 +155,7 @@ class CorrelationSampleCreator : SampleCreator {
     func createSample(_ sampleDict: AnyObject) -> HKSample? {
         
         if let dict = sampleDict as? Dictionary<String, AnyObject> {
-            let dates = dictToTimeframe(dict)
+            guard let dates = dictToTimeframe(dict) else { return nil }
             
             var objects: Set<HKSample> = []
             
@@ -189,7 +191,7 @@ class WorkoutSampleCreator : SampleCreator {
     func createSample(_ sampleDict: AnyObject) -> HKSample? {
 
         if let dict = sampleDict as? Dictionary<String, AnyObject> {
-            let dates = dictToTimeframe(dict)
+            guard let dates = dictToTimeframe(dict) else { return nil }
          
             let activityTypeRawValue = dict[HealthKitConstants.WORKOUT_ACTIVITY_TYPE] as? UInt
             let activityType = HKWorkoutActivityType(rawValue: activityTypeRawValue!)

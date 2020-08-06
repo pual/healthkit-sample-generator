@@ -97,18 +97,13 @@ open class HealthKitProfile : CustomStringConvertible {
         - Parameter onSample: the callback is called on every sample.
     */
     func importSamples(_ onSample: @escaping (_ sample: HKSample) -> Void) throws {
-        
-        let sampleImportHandler = SampleOutputJsonHandler(){
-            (sampleDict:AnyObject, typeName: String) in
-
+        let sampleImportHandler = SampleOutputJsonHandler(){ (sampleDict:AnyObject, typeName: String) in
             if let creator = SampleCreatorRegistry.get(typeName) {
-                let sampleOpt:HKSample? = creator.createSample(sampleDict)
-                if let sample = sampleOpt {
+                if let sample = creator.createSample(sampleDict) {
                     onSample(sample)
                 }
             }
         }
-        
         JsonReader.readFileAtPath(self.fileAtPath.path, withJsonHandler: sampleImportHandler)
     }
     
