@@ -86,6 +86,12 @@ open class HealthKitProfileImporter {
                             onProgress("importing \(lastSampleType)", nil)
                         }
                         let semaphore = DispatchSemaphore(value: 0)
+
+                        // TODO: change to batch save, like every 1000 samples
+//                        self.healthStore.save(samples) { (success: Bool, error: Error?) in
+//                            ;
+//                        }
+                        
                         self.healthStore.save(sample) { (success: Bool, error: Error?) in
                             if !success {
                                 print("no success for : \(sample)")

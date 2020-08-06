@@ -74,6 +74,7 @@ class ImportProfileViewController : UIViewController {
                 importProfile,
                 deleteExistingData: swDeleteExistingData.isOn,
                 onProgress: {(message: String, progressInPercent: NSNumber?)->Void in
+                    print(message)
                     OperationQueue.main.addOperation(){
                         self.lbImportProgress.text = message
                         if let progress = progressInPercent {
@@ -85,6 +86,7 @@ class ImportProfileViewController : UIViewController {
                 onCompletion: {(error: Error?)-> Void in
                     OperationQueue.main.addOperation(){
                         if let exportError = error {
+                            print("Import error: \(exportError)")
                             self.lbImportProgress.text = "Import error: \(exportError)"
                             print(exportError)
                         }
